@@ -29,10 +29,15 @@ read FILESYSTEM
 FILESYSTEM=${FILESYSTEM:-ext4}
 ! command -v mkfs.$FILESYSTEM &> /dev/null && err "Filesystem type does not exist. Exiting."
 
-prompt "Timezone [America/Los_Angeles]: "
+prompt "Timezone [Europe/Berlin]: "
 read TIMEZONE
-TIMEZONE=${TIMEZONE:-America/Los_Angeles}
+TIMEZONE=${TIMEZONE:-Europe/Berlin}
 [[ ! -f "/usr/share/zoneinfo/$TIMEZONE" ]] && err "/usr/share/zoneinfo/$TIMEZONE does not exist. Exiting."
+
+prompt "Language [de_DE.UTF-8 UTF-8]: "
+read LANG
+LANG=${LANG:-en_US.UTF-8 UTF-8}
+[ `cat /etc/local.gen | grep "$LANG" | wc -l` -le 1] err "/etc/local.gen language doesn't exist. Exiting."
 
 prompt "Hostname [localhost]: "
 read HOSTNAME
@@ -119,9 +124,9 @@ genfstab -U /mnt >> /mnt/etc/fstab
 	echo "hwclock --systohc"
 
 	# Setup locales
-	echo "sed -i \"s/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/\" /etc/locale.gen"
+	echo "sed -i \"s/#$LANG/$LANG/\" /etc/locale.gen"
 	echo "locale-gen"
-	echo "echo \"LANG=en_US.UTF-8\" > /etc/locale.conf"
+	echo "echo \"LANG=$LANG\" > /etc/locale.conf"
 
 	# Setup hostname and hosts file
 	echo "echo \"$HOSTNAME\" > /etc/hostname"
