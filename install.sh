@@ -37,7 +37,7 @@ TIMEZONE=${TIMEZONE:-Europe/Berlin}
 prompt "Language [de_DE.UTF-8 UTF-8]: "
 read LANG
 LANG=${LANG:-de_DE.UTF-8 UTF-8}
-[ `cat /etc/locale.gen | grep "$LANG" | wc -l` -le 1 ] err "/etc/local.gen language doesn't exist. Exiting."
+[ `cat /etc/locale.gen | grep "$LANG" | wc -l` -le 1 ] && err "/etc/local.gen language doesn't exist. Exiting."
 
 prompt "Hostname [localhost]: "
 read HOSTNAME
